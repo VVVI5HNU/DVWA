@@ -1,73 +1,71 @@
-🔐 Brute Force – Medium Security Level
-🛠️ Objective:
+### 🔐 Brute Force – Medium Security Level
+
+#### 🛠️ Objective:
 
 Exploit a login form that introduces basic protection through delayed responses to slow down brute-force attacks.
-🧭 Step-by-Step Exploitation Using Burp Suite
 
-    Identify the Key Difference
+---
 
-        View the page source of the login form.
+### 🧭 Step-by-Step Exploitation Using Burp Suite
 
-        Scroll down and observe that after a failed login attempt, the server executes a sleep(2) command.
+1. **Identify the Key Difference**
 
-        This introduces a 2-second delay per attempt, making brute-force attacks slower but not impossible.
+   * View the **page source** of the login form.
+   * Scroll down and observe that after a failed login attempt, the server executes a `sleep(2)` command.
+   * This introduces a **2-second delay** per attempt, making brute-force attacks slower but not impossible.
 
-    Launch Burp Suite
+2. **Launch Burp Suite**
 
-        Open Burp Suite → Go to Proxy → Open Browser (with Interceptor on).
+   * Open Burp Suite → Go to **Proxy** → **Open Browser** (with Interceptor on).
 
-    Capture the Request
+3. **Capture the Request**
 
-        Enter any credentials on the login page.
+   * Enter any credentials on the login page.
+   * Intercept the request in Burp and send it to **Intruder**.
 
-        Intercept the request in Burp and send it to Intruder.
+4. **Configure the Attack (Same as Low Level)**
 
-    Configure the Attack (Same as Low Level)
+   * Select the **username** and **password** fields and mark them as payload positions (`§`).
+   * Set **Attack Type** to `Cluster Bomb`.
 
-        Select the username and password fields and mark them as payload positions (§).
+5. **Set Payloads**
 
-        Set Attack Type to Cluster Bomb.
+   * **Payload 1 (Username):**
 
-    Set Payloads
+     * Type: Runtime file
+     * File: `/usr/share/wordlists/metasploit/http_default_users.txt`
+   * **Payload 2 (Password):**
 
-        Payload 1 (Username):
+     * File: `/usr/share/wordlists/metasploit/http_default_passwords.txt`
 
-            Type: Runtime file
+6. **Start the Attack**
 
-            File: /usr/share/wordlists/metasploit/http_default_users.txt
+   * Initiate the attack.
+   * Observe that each request now takes approximately **2000 ms (2 seconds)** to respond due to the delay.
 
-        Payload 2 (Password):
+---
 
-            File: /usr/share/wordlists/metasploit/http_default_passwords.txt
+### 📊 Analyzing the Results
 
-    Start the Attack
+* Monitor the **"Length"** column in the Intruder results.
+* Despite the delay, the correct credentials will still cause a **noticeably different response length**.
+* This indicates a successful login.
 
-        Initiate the attack.
+---
 
-        Observe that each request now takes approximately 2000 ms (2 seconds) to respond due to the delay.
+### ✅ Credentials Found
 
-📊 Analyzing the Results
+* **Username:** `admin`
+* **Password:** `password`
 
-    Monitor the "Length" column in the Intruder results.
+---
 
-    Despite the delay, the correct credentials will still cause a noticeably different response length.
+### 🧩 Why This Works
 
-    This indicates a successful login.
+While DVWA at medium level attempts to slow brute-force attacks using a fixed delay (`sleep(2)`), it doesn't:
 
-✅ Credentials Found
-
-    Username: admin
-
-    Password: password
-
-🧩 Why This Works
-
-While DVWA at medium level attempts to slow brute-force attacks using a fixed delay (sleep(2)), it doesn't:
-
-    Block repeated attempts
-
-    Implement rate limiting
-
-    Randomize delays or response messages
+* Block repeated attempts
+* Implement rate limiting
+* Randomize delays or response messages
 
 As a result, attackers can still use time-based analysis and response length patterns to find valid credentials.
