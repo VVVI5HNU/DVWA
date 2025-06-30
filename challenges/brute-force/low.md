@@ -74,6 +74,3 @@ At the low security level, DVWA does not implement:
 This allows tools like Burp Suite Intruder to automate credential guessing easily.
 
 ---
-
-Would you like a similar format for Medium/High/Impossible levels too? I can help create a full set of walkthroughs in the same professional tone.
-
