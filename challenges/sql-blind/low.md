@@ -1,8 +1,4 @@
-
-### ✅ File: `challenges/sql-injection-blind/low.md`
-
-```markdown
-# 🧨 Blind SQL Injection – Low Security Level
+🧨 Blind SQL Injection – Low Security Level
 
 ### 🛠️ Objective:
 Extract information from the database using Boolean-based blind SQL injection techniques.
